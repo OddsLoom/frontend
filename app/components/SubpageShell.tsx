@@ -13,14 +13,14 @@ export function SubpageShell({ children }: { children: ReactNode }) {
         <nav aria-label="Primary navigation">
           <Link href="/docs">API docs</Link>
           <Link href="/coverage">Coverage</Link>
-          <Link href="/status">Status</Link>
+          <Link href="/about">About</Link>
           <Link className="nav-cta" href="/beta">Request access</Link>
         </nav>
       </header>
       {children}
       <footer className="subpage-footer">
         <div><Link className="logo" href="/"><Mark /><span>ODDSLOOM</span></Link><p>Real-time odds infrastructure.</p></div>
-        <div className="footer-links"><Link href="/about">About</Link><Link href="/docs">Docs</Link><Link href="/security">Security</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></div>
+        <div className="footer-links"><Link href="/about">About</Link><Link href="/docs">Docs</Link><Link href="/coverage">Coverage</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></div>
         <div className="legal">© {new Date().getFullYear()} OddsLoom.<br />Pre-production service.</div>
       </footer>
     </main>

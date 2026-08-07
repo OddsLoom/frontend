@@ -223,7 +223,7 @@ function App() {
 
       <footer>
         <div><Logo /><p>Real-time odds infrastructure.</p></div>
-        <div className="footer-links"><a href="/docs">Docs</a><a href="/status">Status</a><a href="/security">Security</a><a href="/privacy">Privacy</a></div>
+        <div className="footer-links"><a href="/about">About</a><a href="/docs">Docs</a><a href="/coverage">Coverage</a><a href="/privacy">Privacy</a></div>
         <div className="legal">© {new Date().getFullYear()} OddsLoom. All rights reserved.<br />Odds data infrastructure for developers and automated systems.</div>
       </footer>
     </main>

@@ -10,34 +10,36 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <SubpageShell>
-      <PageIntro kicker="About OddsLoom" title="Odds infrastructure built from a real need.">
-        <p>OddsLoom started as infrastructure we wanted for our own real-time systems: one dependable stream instead of a patchwork of sportsbook integrations.</p>
+      <PageIntro kicker="Why OddsLoom" title="We needed the feed. So we started building it.">
+        <p>OddsLoom began as infrastructure for our own real-time systems: one normalized stream instead of a patchwork of sportsbook integrations.</p>
       </PageIntro>
 
-      <section className="prose-grid">
-        <article>
-          <h2>What we are building</h2>
-          <p>A normalized, low-latency API for live and pregame sportsbook odds. The product is intended for developers building models, monitoring, trading, media, and other automated workflows—not a picks service or a consumer betting app.</p>
-        </article>
-        <article>
-          <h2>How we intend to earn trust</h2>
-          <p>By publishing concrete coverage, delivery behavior, incident status, and measured performance as the service comes online. We will distinguish what is live from what is planned and avoid presenting projections as production results.</p>
-        </article>
-        <article>
-          <h2>Where things stand</h2>
-          <p>OddsLoom is pre-production. The API contract is in draft, coverage is being built, and qualified design partners can apply for the private beta. Current availability is always reflected on the <Link href="/status">status page</Link>.</p>
-        </article>
-        <article>
-          <h2>Who we want to work with</h2>
-          <p>Teams whose product depends on timely, machine-readable odds and who can give precise feedback about schemas, delivery guarantees, recovery, and operational needs.</p>
-        </article>
+      <section className="about-manifesto">
+        <div className="about-rail"><span>01</span><i /></div>
+        <div>
+          <span className="section-kicker">The problem</span>
+          <h2>Odds are everywhere.<br />Usable odds are not.</h2>
+          <p>Every book speaks a slightly different language. Markets drift, identifiers disagree, and updates arrive on different clocks. Teams that need real-time data end up spending their time maintaining plumbing instead of building their product.</p>
+        </div>
       </section>
 
-      <section className="page-cta">
-        <span className="section-kicker">Design partners</span>
-        <h2>Help shape the feed you need.</h2>
-        <p>Tell us about your use case, required coverage, and update volume.</p>
-        <Link className="btn-primary" href="/beta">Request beta access <span>→</span></Link>
+      <section className="about-definition">
+        <div className="about-definition-copy">
+          <span className="section-kicker">The product</span>
+          <h2>One connection.<br />A consistent market.</h2>
+        </div>
+        <div className="about-principles">
+          <article><b>01</b><div><h3>Built for machines</h3><p>A structured feed for models, monitoring, trading, media, and automated workflows—not picks and not another betting screen.</p></div></article>
+          <article><b>02</b><div><h3>Normalized at the source</h3><p>One vocabulary for events, markets, selections, and prices so downstream systems stay focused on decisions.</p></div></article>
+          <article><b>03</b><div><h3>Honest about readiness</h3><p>OddsLoom is pre-production. The contract is still being shaped, and we will publish measured performance and concrete coverage when they are real.</p></div></article>
+        </div>
+      </section>
+
+      <section className="about-partner">
+        <span className="section-kicker">Private beta</span>
+        <h2>Building something that moves with the market?</h2>
+        <p>We want design partners with real-time use cases and precise requirements. Tell us what your system needs.</p>
+        <div><Link className="button primary" href="/beta">Request beta access <span>→</span></Link><Link className="button secondary" href="/docs">Read the draft docs</Link></div>
       </section>
     </SubpageShell>
   )
