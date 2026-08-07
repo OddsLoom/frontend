@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next'
-import Script from 'next/script'
 import './globals.css'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://oddsloom.com'
@@ -7,31 +6,31 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://oddsloom.com'
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'OddsLoom — Data-Backed Sports Picks',
+    default: 'OddsLoom — Live Sportsbook Odds in One Place',
     template: '%s | OddsLoom',
   },
   description:
-    'Sharp, data-backed sports picks built from live odds, market movement, and disciplined analysis. Get every pick before the line moves.',
+    'Compare live sportsbook odds, prices, and line movement across the market in one fast, focused view.',
   keywords: [
-    'sports picks',
-    'sports betting analysis',
+    'live sports odds',
+    'sportsbook odds comparison',
     'betting odds',
     'closing line value',
-    'data-backed picks',
+    'line movement',
   ],
   alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
     url: '/',
     siteName: 'OddsLoom',
-    title: 'OddsLoom — Find the edge before it moves',
-    description: 'Data-backed sports picks delivered while the number is still playable.',
+    title: 'OddsLoom — Every line, as it moves',
+    description: 'Compare live sportsbook odds and line movement across the market in one clear view.',
     locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'OddsLoom — Find the edge before it moves',
-    description: 'Data-backed sports picks delivered while the number is still playable.',
+    title: 'OddsLoom — Every line, as it moves',
+    description: 'Compare live sportsbook odds and line movement across the market in one clear view.',
   },
   robots: {
     index: true,
@@ -58,19 +57,21 @@ const organizationSchema = {
   '@type': 'Organization',
   name: 'OddsLoom',
   url: siteUrl,
-  description: 'Data-backed sports picks and betting market analysis.',
+  description: 'Live sportsbook odds aggregation and market comparison.',
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
-      <Script
-        id="organization-schema"
-        type="application/ld+json"
-        strategy="beforeInteractive"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema).replace(/</g, '\\u003c'),
+          }}
+        />
+        {children}
+      </body>
     </html>
   )
 }

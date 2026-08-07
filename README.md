@@ -18,5 +18,5 @@ npm run typecheck
 npm run build
 ```
 
-Before launch, replace the sample picks, pricing, contact email, and placeholder
-performance fields with verified production data and checkout links.
+Before launch, replace the preview odds, pricing, contact email, and placeholder
+coverage fields with production data and checkout links.

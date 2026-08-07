@@ -16,17 +16,17 @@ import {
   Zap,
 } from 'lucide-react'
 
-const picks = [
-  { league: 'NBA', matchup: 'MIN @ DEN', market: 'MIN +5.5', odds: '-110', edge: '+4.8%', time: '7:10 PM' },
-  { league: 'MLB', matchup: 'CHC @ STL', market: 'Under 8.5', odds: '+102', edge: '+3.9%', time: '7:45 PM' },
-  { league: 'WNBA', matchup: 'NYL @ PHX', market: 'NYL ML', odds: '-125', edge: '+3.4%', time: '9:00 PM' },
+const oddsBoard = [
+  { league: 'NBA', matchup: 'MIN @ DEN', market: 'MIN +5.5', price: '-105', book: 'BOOK A', time: '7:10 PM' },
+  { league: 'MLB', matchup: 'CHC @ STL', market: 'Under 8.5', price: '+102', book: 'BOOK B', time: '7:45 PM' },
+  { league: 'WNBA', matchup: 'NYL @ PHX', market: 'NYL ML', price: '-120', book: 'BOOK C', time: '9:00 PM' },
 ]
 
 const faqs = [
-  ['What exactly do I get?', 'Every active pick includes the market, target price, unit size, and a concise explanation of the edge. Alerts arrive before the line has time to drift.'],
-  ['Which sportsbooks do you track?', 'We compare prices across major legal sportsbooks and identify the strongest available number. Book coverage will vary by state.'],
-  ['How many picks are sent?', 'We only publish when the data supports a real edge. Expect selectivity—not a daily quota or forced action.'],
-  ['Can I cancel anytime?', 'Yes. Your membership can be canceled at any time, with access continuing through the end of your billing period.'],
+  ['What exactly do I get?', 'You get access to current sportsbook odds in one clean view, including the event, market, price, book, and update time.'],
+  ['Which sportsbooks do you cover?', 'OddsLoom is designed to aggregate major legal sportsbooks. Final book and market coverage will be listed clearly before launch and may vary by state.'],
+  ['Are these betting picks?', 'No. OddsLoom sells access to odds and market data. We show you the numbers; we do not tell you what to bet.'],
+  ['Can I cancel anytime?', 'Yes. Your subscription can be canceled at any time, with access continuing through the end of your billing period.'],
 ]
 
 function Logo() {
@@ -56,10 +56,10 @@ function App() {
       <nav>
         <Logo />
         <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
-          <a href="#method" onClick={() => setMenuOpen(false)}>The method</a>
-          <a href="#results" onClick={() => setMenuOpen(false)}>Results</a>
+          <a href="#method" onClick={() => setMenuOpen(false)}>Coverage</a>
+          <a href="#results" onClick={() => setMenuOpen(false)}>Data quality</a>
           <a href="#pricing" onClick={() => setMenuOpen(false)}>Pricing</a>
-          <a className="nav-cta" href="#pricing" onClick={() => setMenuOpen(false)}>Join the loom <ArrowRight size={15} /></a>
+          <a className="nav-cta" href="#pricing" onClick={() => setMenuOpen(false)}>Get odds access <ArrowRight size={15} /></a>
         </div>
         <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">
           {menuOpen ? <X /> : <Menu />}
@@ -69,14 +69,14 @@ function App() {
       <section className="hero">
         <div className="hero-grid" aria-hidden="true" />
         <div className="hero-copy reveal visible">
-          <div className="eyebrow"><span className="live-dot" /> Data-backed picks. No noise.</div>
-          <h1>Find the edge<br />before it <em>moves.</em></h1>
-          <p className="hero-sub">Sharp sports picks woven from live market data, price movement, and disciplined analysis—delivered straight to you.</p>
+          <div className="eyebrow"><span className="live-dot" /> Live odds. One clear view.</div>
+          <h1>Every line.<br />As it <em>moves.</em></h1>
+          <p className="hero-sub">Real-time sportsbook odds woven into one fast, focused feed. Compare prices, follow movement, and stop jumping between books.</p>
           <div className="hero-actions">
-            <a className="button primary" href="#pricing">Get the next pick <ArrowRight size={18} /></a>
+            <a className="button primary" href="#pricing">Get odds access <ArrowRight size={18} /></a>
             <a className="button secondary" href="#method">See how it works</a>
           </div>
-          <p className="microcopy"><ShieldCheck size={14} /> Cancel anytime <span /> No long-term contracts</p>
+          <p className="microcopy"><ShieldCheck size={14} /> Multiple books <span /> Markets in one place</p>
         </div>
 
         <div className="terminal-wrap reveal visible">
@@ -87,23 +87,23 @@ function App() {
               <span>UPDATED 14s AGO</span>
             </div>
             <div className="signal-summary">
-              <div><span>MARKETS SCANNED</span><strong>1,248</strong></div>
-              <div><span>EDGES FOUND</span><strong className="lime">03</strong></div>
+              <div><span>MARKETS TRACKED</span><strong>1,248</strong></div>
+              <div><span>PRICE UPDATES</span><strong className="lime">LIVE</strong></div>
               <div className="pulse"><Radio size={16} /> SCANNING</div>
             </div>
-            <div className="pick-label"><span>TONIGHT'S BOARD</span><span>EDGE</span></div>
-            {picks.map((pick, index) => (
-              <div className="pick-row" key={pick.matchup}>
+            <div className="pick-label"><span>TONIGHT&apos;S ODDS</span><span>BEST PRICE</span></div>
+            {oddsBoard.map((line, index) => (
+              <div className="pick-row" key={line.matchup}>
                 <span className="pick-index">0{index + 1}</span>
                 <div className="pick-main">
-                  <span><b>{pick.league}</b> {pick.matchup}</span>
-                  <strong>{pick.market} <small>{pick.odds}</small></strong>
-                  <span>{pick.time} CT</span>
+                  <span><b>{line.league}</b> {line.matchup}</span>
+                  <strong>{line.market} <small>{line.book}</small></strong>
+                  <span>{line.time} CT</span>
                 </div>
-                <span className="edge">{pick.edge}</span>
+                <span className="edge">{line.price}</span>
               </div>
             ))}
-            <div className="terminal-foot"><Zap size={14} /> Members receive picks the moment they clear our threshold.</div>
+            <div className="terminal-foot"><Zap size={14} /> Prices update as new sportsbook odds arrive.</div>
           </div>
         </div>
       </section>
@@ -119,53 +119,53 @@ function App() {
       </div>
 
       <section className="statement reveal" id="method">
-        <span className="section-kicker">The philosophy</span>
-        <h2>Most bettors chase winners.<br />We chase <em>mispriced numbers.</em></h2>
-        <p>Odds are moving markets. We find where the price and probability disagree—and act while the gap is still there.</p>
+        <span className="section-kicker">The product</span>
+        <h2>The odds are everywhere.<br />Now they’re <em>in one place.</em></h2>
+        <p>Sportsbook prices move independently. OddsLoom brings the market together so you can compare the number you want without the tab overload.</p>
       </section>
 
       <section className="method-cards reveal">
         <article>
           <span className="card-number">01</span>
           <div className="icon-box"><BarChart3 /></div>
-          <h3>Scan the market</h3>
-          <p>We monitor books and markets continuously, tracking odds, movement, and discrepancies in real time.</p>
+          <h3>Collect the market</h3>
+          <p>We monitor supported sportsbooks and organize incoming odds by league, event, and market.</p>
           <div className="mini-chart"><i /><i /><i /><i /><i /><i /><i /></div>
         </article>
         <article className="featured-card">
           <span className="card-number">02</span>
           <div className="icon-box"><Sparkles /></div>
-          <h3>Isolate the edge</h3>
-          <p>Each opportunity is filtered through our models and reviewed against context before it earns a play.</p>
-          <div className="gauge"><span>ODDSLOOM EDGE</span><strong>+4.8%</strong><div><i /></div></div>
+          <h3>Compare every price</h3>
+          <p>See the available lines together and identify the strongest displayed price without checking each book manually.</p>
+          <div className="gauge"><span>BOOK COVERAGE</span><strong>CONNECTED</strong><div><i /></div></div>
         </article>
         <article>
           <span className="card-number">03</span>
           <div className="icon-box"><TimerReset /></div>
-          <h3>Move with precision</h3>
-          <p>You get the bet, the target price, and the reasoning—delivered while the number is still playable.</p>
-          <div className="alert-pill"><Zap size={14} /> NEW PICK DELIVERED <span>NOW</span></div>
+          <h3>Follow every move</h3>
+          <p>Watch prices refresh and track market movement from one focused, consistent interface.</p>
+          <div className="alert-pill"><Zap size={14} /> ODDS UPDATED <span>NOW</span></div>
         </article>
       </section>
 
       <section className="results" id="results">
         <div className="results-copy reveal">
-          <span className="section-kicker">Track record</span>
-          <h2>Process over promises.</h2>
-          <p>We don’t sell locks. We document every play, publish the price, and let the record speak for itself.</p>
+          <span className="section-kicker">Data quality</span>
+          <h2>Clean data. Clear market.</h2>
+          <p>Odds are only useful when they are organized, timely, and easy to compare. That is the product.</p>
           <div className="principles">
-            <div><Check size={17} /><span><strong>Every pick tracked</strong>Wins, losses, odds, and closing line—all visible.</span></div>
-            <div><Check size={17} /><span><strong>Flat, disciplined staking</strong>No chasing. No wild parlays. No gimmicks.</span></div>
-            <div><Check size={17} /><span><strong>Transparent reporting</strong>Monthly reports shared with every member.</span></div>
+            <div><Check size={17} /><span><strong>Consistent market structure</strong>Events, markets, books, and prices in a normalized format.</span></div>
+            <div><Check size={17} /><span><strong>Visible timestamps</strong>Know when each displayed price was last refreshed.</span></div>
+            <div><Check size={17} /><span><strong>No manufactured advice</strong>Market data without locks, touting, or betting recommendations.</span></div>
           </div>
         </div>
         <div className="scorecard reveal">
-          <div className="scorecard-head"><span>PERFORMANCE / SAMPLE</span><span>LAST 90 DAYS</span></div>
+          <div className="scorecard-head"><span>DATA FEED / PREVIEW</span><span>LIVE STATUS</span></div>
           <div className="score-grid">
-            <div><span>RECORD</span><strong>—</strong><small>Connect your real data</small></div>
-            <div><span>UNITS</span><strong>—</strong><small>Verified performance</small></div>
-            <div><span>ROI</span><strong>—</strong><small>All tracked plays</small></div>
-            <div><span>AVG. CLV</span><strong>—</strong><small>Closing line value</small></div>
+            <div><span>SPORTS</span><strong>7+</strong><small>Coverage preview</small></div>
+            <div><span>BOOKS</span><strong>—</strong><small>Final list coming soon</small></div>
+            <div><span>MARKETS</span><strong>LIVE</strong><small>Continuously refreshed</small></div>
+            <div><span>FORMAT</span><strong>1</strong><small>Normalized view</small></div>
           </div>
           <div className="chart-placeholder">
             <svg viewBox="0 0 500 150" preserveAspectRatio="none" aria-hidden="true">
@@ -173,32 +173,32 @@ function App() {
               <path className="area" d="M0,130 C40,125 50,108 80,114 S125,95 155,100 S200,68 225,80 S270,62 295,66 S335,35 360,49 S405,30 430,35 S470,12 500,18 L500,150 L0,150Z" />
               <path className="line" d="M0,130 C40,125 50,108 80,114 S125,95 155,100 S200,68 225,80 S270,62 295,66 S335,35 360,49 S405,30 430,35 S470,12 500,18" />
             </svg>
-            <span className="sample-badge">SAMPLE DATA</span>
+            <span className="sample-badge">FEED PREVIEW</span>
           </div>
-          <p className="score-note">Performance fields are ready for your verified results.</p>
+          <p className="score-note">Final sportsbook coverage and refresh specifications will be published before launch.</p>
         </div>
       </section>
 
       <section className="pricing-section" id="pricing">
         <div className="pricing-heading reveal">
-          <span className="section-kicker">Membership</span>
-          <h2>One plan. Every edge.</h2>
-          <p>Everything you need to bet smarter—without the noise.</p>
+          <span className="section-kicker">Odds access</span>
+          <h2>One plan. Every line.</h2>
+          <p>The market in one place, without the noise.</p>
         </div>
         <div className="price-card reveal">
           <div className="popular">FOUNDING MEMBER RATE</div>
           <div className="price-top">
-            <div><span>ODDSLOOM / ALL ACCESS</span><h3>$49<small>/month</small></h3></div>
+            <div><span>ODDSLOOM / ODDS ACCESS</span><h3>$49<small>/month</small></h3></div>
             <div className="price-mark"><TrendingUp /></div>
           </div>
           <ul>
-            <li><Check /> Every official OddsLoom pick</li>
-            <li><Check /> Instant pick alerts</li>
-            <li><Check /> Target odds and unit sizing</li>
-            <li><Check /> Full performance dashboard</li>
-            <li><Check /> Member-only analysis</li>
+            <li><Check /> Live sportsbook odds</li>
+            <li><Check /> Side-by-side price comparison</li>
+            <li><Check /> Line movement visibility</li>
+            <li><Check /> Multi-sport market coverage</li>
+            <li><Check /> A fast, distraction-free dashboard</li>
           </ul>
-          <a className="button primary full" href="mailto:hello@oddsloom.com?subject=OddsLoom%20early%20access">Start your membership <ArrowRight size={18} /></a>
+          <a className="button primary full" href="mailto:hello@oddsloom.com?subject=OddsLoom%20odds%20access">Get odds access <ArrowRight size={18} /></a>
           <p className="price-note">7-day money-back guarantee · Cancel anytime</p>
         </div>
       </section>
@@ -218,14 +218,14 @@ function App() {
       <section className="final-cta reveal">
         <div className="loom-lines" />
         <span className="section-kicker">The market won't wait</span>
-        <h2>Get there before<br />the number does.</h2>
-        <a className="button primary" href="#pricing">Join OddsLoom <ArrowRight size={18} /></a>
+        <h2>See the whole market.<br />In one place.</h2>
+        <a className="button primary" href="#pricing">Get odds access <ArrowRight size={18} /></a>
       </section>
 
       <footer>
-        <div><Logo /><p>Sharp data. Clear decisions.</p></div>
-        <div className="footer-links"><a href="#method">Method</a><a href="#results">Results</a><a href="#pricing">Pricing</a></div>
-        <div className="legal">© {new Date().getFullYear()} OddsLoom. All rights reserved.<br />Must be 21+. Please bet responsibly.</div>
+        <div><Logo /><p>Every line. One clear view.</p></div>
+        <div className="footer-links"><a href="#method">Coverage</a><a href="#results">Data quality</a><a href="#pricing">Pricing</a></div>
+        <div className="legal">© {new Date().getFullYear()} OddsLoom. All rights reserved.<br />OddsLoom provides market data, not betting advice. Must be 21+.</div>
       </footer>
     </main>
   )
