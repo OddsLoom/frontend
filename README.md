@@ -1,7 +1,7 @@
 # OddsLoom frontend
 
-Customer-facing landing page for OddsLoom, built with Next.js, React, and
-TypeScript.
+Developer-facing landing page for the OddsLoom real-time sportsbook odds feed,
+built with Next.js, React, and TypeScript.
 
 ## Development
 
@@ -18,5 +18,6 @@ npm run typecheck
 npm run build
 ```
 
-Before launch, replace the preview odds, pricing, contact email, and placeholder
-coverage fields with production data and checkout links.
+Before launch, replace the illustrative payloads and protocol targets with
+validated production specifications, documentation, coverage, and service-level
+objectives.

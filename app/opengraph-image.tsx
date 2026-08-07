@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og'
 
-export const alt = 'OddsLoom — Every line, as it moves'
+export const alt = 'OddsLoom — Real-time odds infrastructure'
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
@@ -32,15 +32,15 @@ export default function OpenGraphImage() {
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ color: '#d8ff46', fontSize: 18, letterSpacing: 4, marginBottom: 22 }}>
-            LIVE ODDS. ONE CLEAR VIEW.
+            REAL-TIME ODDS INFRASTRUCTURE
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', fontSize: 86, lineHeight: .98, fontWeight: 800, letterSpacing: -5 }}>
-            <div style={{ display: 'flex' }}>Every line.</div>
-            <div style={{ display: 'flex' }}>As it&nbsp;<span style={{ color: '#d8ff46' }}>moves.</span></div>
+            <div style={{ display: 'flex' }}>Every update.</div>
+            <div style={{ display: 'flex' }}>One&nbsp;<span style={{ color: '#d8ff46' }}>live feed.</span></div>
           </div>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', color: '#8d9188', fontSize: 20 }}>
-          <span>Every line. One clear view.</span>
+          <span>Built for automated systems.</span>
           <span style={{ color: '#d8ff46' }}>ODDSLOOM.COM →</span>
         </div>
       </div>

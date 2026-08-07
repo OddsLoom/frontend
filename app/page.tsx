@@ -11,22 +11,21 @@ import {
   ShieldCheck,
   Sparkles,
   TimerReset,
-  TrendingUp,
   X,
   Zap,
 } from 'lucide-react'
 
-const oddsBoard = [
-  { league: 'NBA', matchup: 'MIN @ DEN', market: 'MIN +5.5', price: '-105', book: 'BOOK A', time: '7:10 PM' },
-  { league: 'MLB', matchup: 'CHC @ STL', market: 'Under 8.5', price: '+102', book: 'BOOK B', time: '7:45 PM' },
-  { league: 'WNBA', matchup: 'NYL @ PHX', market: 'NYL ML', price: '-120', book: 'BOOK C', time: '9:00 PM' },
+const feedPreview = [
+  { channel: 'odds.update', event: 'NBA:MIN@DEN', market: 'spread', source: 'book_a', sequence: '018492', price: '-105' },
+  { channel: 'odds.update', event: 'MLB:CHC@STL', market: 'total', source: 'book_b', sequence: '018493', price: '+102' },
+  { channel: 'odds.update', event: 'WNBA:NYL@PHX', market: 'moneyline', source: 'book_c', sequence: '018494', price: '-120' },
 ]
 
 const faqs = [
-  ['What exactly do I get?', 'You get access to current sportsbook odds in one clean view, including the event, market, price, book, and update time.'],
-  ['Which sportsbooks do you cover?', 'OddsLoom is designed to aggregate major legal sportsbooks. Final book and market coverage will be listed clearly before launch and may vary by state.'],
-  ['Are these betting picks?', 'No. OddsLoom sells access to odds and market data. We show you the numbers; we do not tell you what to bet.'],
-  ['Can I cancel anytime?', 'Yes. Your subscription can be canceled at any time, with access continuing through the end of your billing period.'],
+  ['Who is OddsLoom built for?', 'Developers and teams building automated betting systems, quantitative models, odds comparison products, analytics tools, and other data-driven applications.'],
+  ['How will data be delivered?', 'The planned interface combines an initial snapshot with incremental real-time updates over WebSocket. Final protocol details will be published with the beta documentation.'],
+  ['Which books and markets will be covered?', 'Coverage is still being validated. Beta applicants can tell us which sports, books, and market types their systems require.'],
+  ['Can I integrate before launch?', 'We plan to publish example payloads and a replayable sample feed so design partners can validate the schema before production access opens.'],
 ]
 
 function Logo() {
@@ -56,10 +55,10 @@ function App() {
       <nav>
         <Logo />
         <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
-          <a href="#method" onClick={() => setMenuOpen(false)}>Coverage</a>
-          <a href="#results" onClick={() => setMenuOpen(false)}>Data quality</a>
-          <a href="#pricing" onClick={() => setMenuOpen(false)}>Pricing</a>
-          <a className="nav-cta" href="#pricing" onClick={() => setMenuOpen(false)}>Get odds access <ArrowRight size={15} /></a>
+          <a href="#method" onClick={() => setMenuOpen(false)}>Pipeline</a>
+          <a href="#results" onClick={() => setMenuOpen(false)}>Data model</a>
+          <a href="#pricing" onClick={() => setMenuOpen(false)}>Beta</a>
+          <a className="nav-cta" href="#pricing" onClick={() => setMenuOpen(false)}>Request API access <ArrowRight size={15} /></a>
         </div>
         <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">
           {menuOpen ? <X /> : <Menu />}
@@ -69,41 +68,41 @@ function App() {
       <section className="hero">
         <div className="hero-grid" aria-hidden="true" />
         <div className="hero-copy reveal visible">
-          <div className="eyebrow"><span className="live-dot" /> Live odds. One clear view.</div>
-          <h1>Every line.<br />As it <em>moves.</em></h1>
-          <p className="hero-sub">Real-time sportsbook odds woven into one fast, focused feed. Compare prices, follow movement, and stop jumping between books.</p>
+          <div className="eyebrow"><span className="live-dot" /> Real-time odds infrastructure</div>
+          <h1>Every update.<br />One <em>live feed.</em></h1>
+          <p className="hero-sub">Normalized sportsbook odds delivered for automated systems. Subscribe once, process a consistent schema, and react as the market moves.</p>
           <div className="hero-actions">
-            <a className="button primary" href="#pricing">Get odds access <ArrowRight size={18} /></a>
-            <a className="button secondary" href="#method">See how it works</a>
+            <a className="button primary" href="#pricing">Request beta access <ArrowRight size={18} /></a>
+            <a className="button secondary" href="#method">Explore the pipeline</a>
           </div>
-          <p className="microcopy"><ShieldCheck size={14} /> Multiple books <span /> Markets in one place</p>
+          <p className="microcopy"><ShieldCheck size={14} /> Normalized schema <span /> WebSocket delivery</p>
         </div>
 
         <div className="terminal-wrap reveal visible">
           <div className="terminal-glow" />
           <div className="terminal">
             <div className="terminal-head">
-              <div><span className="status-dot" /> LIVE BOARD</div>
-              <span>UPDATED 14s AGO</span>
+              <div><span className="status-dot" /> FEED PREVIEW</div>
+              <span>WSS / CONNECTED</span>
             </div>
             <div className="signal-summary">
-              <div><span>MARKETS TRACKED</span><strong>1,248</strong></div>
-              <div><span>PRICE UPDATES</span><strong className="lime">LIVE</strong></div>
-              <div className="pulse"><Radio size={16} /> SCANNING</div>
+              <div><span>DELIVERY</span><strong>WS</strong></div>
+              <div><span>PAYLOAD</span><strong className="lime">JSON</strong></div>
+              <div className="pulse"><Radio size={16} /> STREAMING</div>
             </div>
-            <div className="pick-label"><span>TONIGHT&apos;S ODDS</span><span>BEST PRICE</span></div>
-            {oddsBoard.map((line, index) => (
-              <div className="pick-row" key={line.matchup}>
+            <div className="pick-label"><span>INCREMENTAL UPDATES</span><span>PRICE</span></div>
+            {feedPreview.map((update, index) => (
+              <div className="pick-row" key={update.sequence}>
                 <span className="pick-index">0{index + 1}</span>
                 <div className="pick-main">
-                  <span><b>{line.league}</b> {line.matchup}</span>
-                  <strong>{line.market} <small>{line.book}</small></strong>
-                  <span>{line.time} CT</span>
+                  <span><b>{update.channel}</b> seq:{update.sequence}</span>
+                  <strong>{update.event} <small>{update.market}</small></strong>
+                  <span>source:{update.source}</span>
                 </div>
-                <span className="edge">{line.price}</span>
+                <span className="edge">{update.price}</span>
               </div>
             ))}
-            <div className="terminal-foot"><Zap size={14} /> Prices update as new sportsbook odds arrive.</div>
+            <div className="terminal-foot"><Zap size={14} /> Illustrative schema preview — not a production feed.</div>
           </div>
         </div>
       </section>
@@ -119,53 +118,53 @@ function App() {
       </div>
 
       <section className="statement reveal" id="method">
-        <span className="section-kicker">The product</span>
-        <h2>The odds are everywhere.<br />Now they’re <em>in one place.</em></h2>
-        <p>Sportsbook prices move independently. OddsLoom brings the market together so you can compare the number you want without the tab overload.</p>
+        <span className="section-kicker">The pipeline</span>
+        <h2>Stop adapting to every book.<br />Build against <em>one feed.</em></h2>
+        <p>Sportsbook data arrives in different shapes and changes continuously. OddsLoom is being built to turn those updates into a consistent stream for software—not another betting dashboard.</p>
       </section>
 
       <section className="method-cards reveal">
         <article>
           <span className="card-number">01</span>
           <div className="icon-box"><BarChart3 /></div>
-          <h3>Collect the market</h3>
-          <p>We monitor supported sportsbooks and organize incoming odds by league, event, and market.</p>
+          <h3>Ingest continuously</h3>
+          <p>Source updates enter a persistent collection pipeline designed around live sportsbook market changes.</p>
           <div className="mini-chart"><i /><i /><i /><i /><i /><i /><i /></div>
         </article>
         <article className="featured-card">
           <span className="card-number">02</span>
           <div className="icon-box"><Sparkles /></div>
-          <h3>Compare every price</h3>
-          <p>See the available lines together and identify the strongest displayed price without checking each book manually.</p>
-          <div className="gauge"><span>BOOK COVERAGE</span><strong>CONNECTED</strong><div><i /></div></div>
+          <h3>Normalize once</h3>
+          <p>Events, participants, markets, outcomes, prices, and source timestamps map into a versioned common schema.</p>
+          <div className="gauge"><span>SCHEMA</span><strong>VERSIONED</strong><div><i /></div></div>
         </article>
         <article>
           <span className="card-number">03</span>
           <div className="icon-box"><TimerReset /></div>
-          <h3>Follow every move</h3>
-          <p>Watch prices refresh and track market movement from one focused, consistent interface.</p>
-          <div className="alert-pill"><Zap size={14} /> ODDS UPDATED <span>NOW</span></div>
+          <h3>Stream the deltas</h3>
+          <p>Consumers receive a snapshot, then ordered incremental updates built for stateful automated systems.</p>
+          <div className="alert-pill"><Zap size={14} /> DELTA EMITTED <span>SEQ +1</span></div>
         </article>
       </section>
 
       <section className="results" id="results">
         <div className="results-copy reveal">
-          <span className="section-kicker">Data quality</span>
-          <h2>Clean data. Clear market.</h2>
-          <p>Odds are only useful when they are organized, timely, and easy to compare. That is the product.</p>
+          <span className="section-kicker">The data contract</span>
+          <h2>Predictable inputs for automated systems.</h2>
+          <p>A live feed is only useful when consumers can build state safely. The protocol is being designed around explicit ordering, timing, and recovery semantics.</p>
           <div className="principles">
-            <div><Check size={17} /><span><strong>Consistent market structure</strong>Events, markets, books, and prices in a normalized format.</span></div>
-            <div><Check size={17} /><span><strong>Visible timestamps</strong>Know when each displayed price was last refreshed.</span></div>
-            <div><Check size={17} /><span><strong>No manufactured advice</strong>Market data without locks, touting, or betting recommendations.</span></div>
+            <div><Check size={17} /><span><strong>Stable identifiers</strong>Canonical IDs connect events, markets, outcomes, and sources across updates.</span></div>
+            <div><Check size={17} /><span><strong>Source-aware timestamps</strong>Payloads distinguish observed, ingested, and emitted time where available.</span></div>
+            <div><Check size={17} /><span><strong>Snapshot recovery</strong>Reconnect behavior is designed to restore state before deltas resume.</span></div>
           </div>
         </div>
         <div className="scorecard reveal">
-          <div className="scorecard-head"><span>DATA FEED / PREVIEW</span><span>LIVE STATUS</span></div>
+          <div className="scorecard-head"><span>PROTOCOL / PREVIEW</span><span>DESIGN TARGET</span></div>
           <div className="score-grid">
-            <div><span>SPORTS</span><strong>7+</strong><small>Coverage preview</small></div>
-            <div><span>BOOKS</span><strong>—</strong><small>Final list coming soon</small></div>
-            <div><span>MARKETS</span><strong>LIVE</strong><small>Continuously refreshed</small></div>
-            <div><span>FORMAT</span><strong>1</strong><small>Normalized view</small></div>
+            <div><span>TRANSPORT</span><strong>WS</strong><small>Real-time stream</small></div>
+            <div><span>ENCODING</span><strong>JSON</strong><small>Typed payloads</small></div>
+            <div><span>STATE</span><strong>S+D</strong><small>Snapshot + deltas</small></div>
+            <div><span>ORDERING</span><strong>SEQ</strong><small>Sequence-aware</small></div>
           </div>
           <div className="chart-placeholder">
             <svg viewBox="0 0 500 150" preserveAspectRatio="none" aria-hidden="true">
@@ -173,38 +172,38 @@ function App() {
               <path className="area" d="M0,130 C40,125 50,108 80,114 S125,95 155,100 S200,68 225,80 S270,62 295,66 S335,35 360,49 S405,30 430,35 S470,12 500,18 L500,150 L0,150Z" />
               <path className="line" d="M0,130 C40,125 50,108 80,114 S125,95 155,100 S200,68 225,80 S270,62 295,66 S335,35 360,49 S405,30 430,35 S470,12 500,18" />
             </svg>
-            <span className="sample-badge">FEED PREVIEW</span>
+            <span className="sample-badge">DESIGN PREVIEW</span>
           </div>
-          <p className="score-note">Final sportsbook coverage and refresh specifications will be published before launch.</p>
+          <p className="score-note">Protocol details and performance guarantees will be published after production validation.</p>
         </div>
       </section>
 
       <section className="pricing-section" id="pricing">
         <div className="pricing-heading reveal">
-          <span className="section-kicker">Odds access</span>
-          <h2>One plan. Every line.</h2>
-          <p>The market in one place, without the noise.</p>
+          <span className="section-kicker">Design partner beta</span>
+          <h2>Build against the feed early.</h2>
+          <p>Tell us what your system needs and help shape the production interface.</p>
         </div>
         <div className="price-card reveal">
-          <div className="popular">FOUNDING MEMBER RATE</div>
+          <div className="popular">PRIVATE BETA</div>
           <div className="price-top">
-            <div><span>ODDSLOOM / ODDS ACCESS</span><h3>$49<small>/month</small></h3></div>
-            <div className="price-mark"><TrendingUp /></div>
+            <div><span>ODDSLOOM / DEVELOPER ACCESS</span><h3>BETA</h3></div>
+            <div className="price-mark"><Radio /></div>
           </div>
           <ul>
-            <li><Check /> Live sportsbook odds</li>
-            <li><Check /> Side-by-side price comparison</li>
-            <li><Check /> Line movement visibility</li>
-            <li><Check /> Multi-sport market coverage</li>
-            <li><Check /> A fast, distraction-free dashboard</li>
+            <li><Check /> Real-time normalized odds feed</li>
+            <li><Check /> Snapshot and incremental updates</li>
+            <li><Check /> Direct input on schema and coverage</li>
+            <li><Check /> Sample payloads and integration guidance</li>
+            <li><Check /> Production pricing before public launch</li>
           </ul>
-          <a className="button primary full" href="mailto:hello@oddsloom.com?subject=OddsLoom%20odds%20access">Get odds access <ArrowRight size={18} /></a>
-          <p className="price-note">7-day money-back guarantee · Cancel anytime</p>
+          <a className="button primary full" href="mailto:hello@oddsloom.com?subject=OddsLoom%20API%20beta%20access&body=Use%20case%3A%0ASports%20and%20books%3A%0AExpected%20volume%3A%0APreferred%20delivery%3A">Request API beta access <ArrowRight size={18} /></a>
+          <p className="price-note">No payment required · Qualified design partners only</p>
         </div>
       </section>
 
       <section className="faq reveal">
-        <div><span className="section-kicker">Good questions</span><h2>Before you join.</h2></div>
+        <div><span className="section-kicker">Technical questions</span><h2>Before you integrate.</h2></div>
         <div className="faq-list">
           {faqs.map(([question, answer], index) => (
             <button className={`faq-item ${openFaq === index ? 'active' : ''}`} key={question} onClick={() => setOpenFaq(openFaq === index ? null : index)}>
@@ -217,15 +216,15 @@ function App() {
 
       <section className="final-cta reveal">
         <div className="loom-lines" />
-        <span className="section-kicker">The market won't wait</span>
-        <h2>See the whole market.<br />In one place.</h2>
-        <a className="button primary" href="#pricing">Get odds access <ArrowRight size={18} /></a>
+        <span className="section-kicker">Built for machines, not tabs</span>
+        <h2>One connection.<br />Every update.</h2>
+        <a className="button primary" href="#pricing">Request beta access <ArrowRight size={18} /></a>
       </section>
 
       <footer>
-        <div><Logo /><p>Every line. One clear view.</p></div>
-        <div className="footer-links"><a href="#method">Coverage</a><a href="#results">Data quality</a><a href="#pricing">Pricing</a></div>
-        <div className="legal">© {new Date().getFullYear()} OddsLoom. All rights reserved.<br />OddsLoom provides market data, not betting advice. Must be 21+.</div>
+        <div><Logo /><p>Real-time odds infrastructure.</p></div>
+        <div className="footer-links"><a href="#method">Pipeline</a><a href="#results">Data model</a><a href="#pricing">Beta</a></div>
+        <div className="legal">© {new Date().getFullYear()} OddsLoom. All rights reserved.<br />Odds data infrastructure for developers and automated systems.</div>
       </footer>
     </main>
   )
