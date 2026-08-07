@@ -56,9 +56,9 @@ function App() {
         <Logo />
         <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
           <a href="#method" onClick={() => setMenuOpen(false)}>Pipeline</a>
-          <a href="#results" onClick={() => setMenuOpen(false)}>Data model</a>
-          <a href="#pricing" onClick={() => setMenuOpen(false)}>Beta</a>
-          <a className="nav-cta" href="#pricing" onClick={() => setMenuOpen(false)}>Request API access <ArrowRight size={15} /></a>
+          <a href="/docs" onClick={() => setMenuOpen(false)}>API docs</a>
+          <a href="/coverage" onClick={() => setMenuOpen(false)}>Coverage</a>
+          <a className="nav-cta" href="/beta" onClick={() => setMenuOpen(false)}>Request API access <ArrowRight size={15} /></a>
         </div>
         <button className="menu-button" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle navigation">
           {menuOpen ? <X /> : <Menu />}
@@ -72,7 +72,7 @@ function App() {
           <h1>Every update.<br />One <em>live feed.</em></h1>
           <p className="hero-sub">Normalized sportsbook odds delivered for automated systems. Subscribe once, process a consistent schema, and react as the market moves.</p>
           <div className="hero-actions">
-            <a className="button primary" href="#pricing">Request beta access <ArrowRight size={18} /></a>
+            <a className="button primary" href="/beta">Request beta access <ArrowRight size={18} /></a>
             <a className="button secondary" href="#method">Explore the pipeline</a>
           </div>
           <p className="microcopy"><ShieldCheck size={14} /> Normalized schema <span /> WebSocket delivery</p>
@@ -197,7 +197,7 @@ function App() {
             <li><Check /> Sample payloads and integration guidance</li>
             <li><Check /> Production pricing before public launch</li>
           </ul>
-          <a className="button primary full" href="mailto:hello@oddsloom.com?subject=OddsLoom%20API%20beta%20access&body=Use%20case%3A%0ASports%20and%20books%3A%0AExpected%20volume%3A%0APreferred%20delivery%3A">Request API beta access <ArrowRight size={18} /></a>
+          <a className="button primary full" href="/beta">Request API beta access <ArrowRight size={18} /></a>
           <p className="price-note">No payment required · Qualified design partners only</p>
         </div>
       </section>
@@ -218,12 +218,12 @@ function App() {
         <div className="loom-lines" />
         <span className="section-kicker">Built for machines, not tabs</span>
         <h2>One connection.<br />Every update.</h2>
-        <a className="button primary" href="#pricing">Request beta access <ArrowRight size={18} /></a>
+        <a className="button primary" href="/beta">Request beta access <ArrowRight size={18} /></a>
       </section>
 
       <footer>
         <div><Logo /><p>Real-time odds infrastructure.</p></div>
-        <div className="footer-links"><a href="#method">Pipeline</a><a href="#results">Data model</a><a href="#pricing">Beta</a></div>
+        <div className="footer-links"><a href="/docs">Docs</a><a href="/status">Status</a><a href="/security">Security</a><a href="/privacy">Privacy</a></div>
         <div className="legal">© {new Date().getFullYear()} OddsLoom. All rights reserved.<br />Odds data infrastructure for developers and automated systems.</div>
       </footer>
     </main>

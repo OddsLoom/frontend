@@ -2,13 +2,12 @@ import type { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://oddsloom.com'
+  const routes = ['', '/about', '/docs', '/beta', '/coverage', '/status', '/security', '/privacy', '/terms']
 
-  return [
-    {
-      url: siteUrl,
+  return routes.map((route, index) => ({
+      url: `${siteUrl}${route}`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-  ]
+      changeFrequency: index === 0 ? 'weekly' : 'monthly',
+      priority: index === 0 ? 1 : route === '/docs' || route === '/beta' ? 0.9 : 0.6,
+    }))
 }

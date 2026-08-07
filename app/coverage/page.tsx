@@ -1,0 +1,8 @@
+import type { Metadata } from 'next'
+import { PageIntro, SubpageShell } from '../components/SubpageShell'
+
+export const metadata: Metadata = { title: 'Coverage Roadmap', description: 'Current OddsLoom sportsbook odds feed coverage roadmap and beta priorities.' }
+
+export default function CoveragePage() {
+  return <SubpageShell><PageIntro kicker="Coverage roadmap" title="Coverage follows real demand."><p>OddsLoom is pre-production. This page separates active exploration from validated production coverage so teams can evaluate fit without inflated promises.</p></PageIntro><section className="content-grid"><article className="content-card accent"><span>INITIAL FOCUS</span><h2>US sports and core markets</h2><p>The initial pipeline is focused on high-volume US sportsbook events and the market types automated systems most commonly consume.</p><ul><li>Basketball</li><li>Football</li><li>Baseball</li><li>Hockey</li></ul></article><article className="content-card"><span>MARKET PRIORITY</span><h2>Start narrow, model deeply</h2><p>Moneyline, spread, and total markets are the current starting point. Player props and alternate markets require separate normalization and quality validation.</p></article><article className="content-card"><span>SOURCES</span><h2>No published book list yet</h2><p>Source availability, jurisdiction, stability, and permitted usage are still being evaluated. We will publish a precise list only after production validation.</p></article><article className="content-card"><span>REQUESTS</span><h2>Your requirements matter</h2><p>Beta applications directly inform which sports, books, and markets receive engineering priority.</p><a href="/beta">Submit coverage requirements →</a></article></section></SubpageShell>
+}
