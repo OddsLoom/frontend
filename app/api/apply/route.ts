@@ -6,7 +6,7 @@ export const runtime = 'nodejs'
 
 type Application = Record<string, unknown>
 
-const limits: Record<string, number> = { name: 100, email: 200, company: 160, useCase: 1200, coverage: 1200, provider: 160, delivery: 40, volume: 60, historical: 40, timeline: 60, budget: 40 }
+const limits: Record<string, number> = { name: 100, email: 200, company: 160, useCase: 1200, coverage: 1200, provider: 160, budget: 40 }
 
 function clean(value: unknown, max: number) {
   return typeof value === 'string' ? value.trim().slice(0, max) : ''
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
   if (clean(body.website, 200)) return NextResponse.json({ ok: true }, { status: 201 })
 
   const application = Object.fromEntries(Object.entries(limits).map(([key, max]) => [key, clean(body[key], max)]))
-  const required = ['name', 'email', 'company', 'useCase', 'coverage', 'delivery', 'volume', 'historical', 'timeline']
+  const required = ['name', 'email', 'company', 'useCase', 'coverage']
   if (required.some(key => !application[key]) || body.consent !== 'yes') return NextResponse.json({ error: 'Please complete all required fields.' }, { status: 400 })
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(application.email)) return NextResponse.json({ error: 'Enter a valid email address.' }, { status: 400 })
 
