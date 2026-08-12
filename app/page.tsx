@@ -23,9 +23,9 @@ const feedPreview = [
 
 const faqs = [
   ['Who is OddsLoom built for?', 'Developers and teams building automated betting systems, quantitative models, odds comparison products, analytics tools, and other data-driven applications.'],
-  ['How will data be delivered?', 'The planned interface combines an initial snapshot with incremental real-time updates over WebSocket. Final protocol details will be published with the beta documentation.'],
-  ['Which books and markets will be covered?', 'Coverage is still being validated. Beta applicants can tell us which sports, books, and market types their systems require.'],
-  ['Can I integrate before launch?', 'We plan to publish example payloads and a replayable sample feed so design partners can validate the schema before production access opens.'],
+  ['How will data be delivered?', 'The beta provides a versioned REST snapshot followed by authenticated, ordered WebSocket deltas. After a reconnect or sequence gap, clients obtain a fresh snapshot before deltas resume.'],
+  ['Which books and markets will be covered?', 'The live manifest lists every release-gated actively ingested sportsbook, its represented jurisdictions, and every ingested sport and league. Within that coverage, OddsLoom publishes every observed canonical market; provider-specific and unresolved markets are excluded.'],
+  ['Can I integrate before launch?', 'Qualified design partners may receive sample payloads, sandbox access, or a beta key as validation permits. Historical data and production access are not part of the beta promise.'],
 ]
 
 function Logo() {
@@ -111,7 +111,7 @@ function App() {
         <div className="ticker-track">
           {[0, 1].map(copy => (
             <div className="ticker-set" key={copy}>
-              <span>NBA</span><i /> <span>NFL</span><i /> <span>MLB</span><i /> <span>NHL</span><i /> <span>NCAAB</span><i /> <span>WNBA</span><i /> <span>UFC</span><i />
+              <span>ALL INGESTED SPORTS &amp; LEAGUES</span><i /> <span>EVERY CANONICAL MARKET</span><i /> <span>RELEASE-GATED LIVE MANIFEST</span><i />
             </div>
           ))}
         </div>
@@ -151,7 +151,7 @@ function App() {
         <div className="results-copy reveal">
           <span className="section-kicker">The data contract</span>
           <h2>Predictable inputs for automated systems.</h2>
-          <p>A live feed is only useful when consumers can build state safely. The protocol is being designed around explicit ordering, timing, and recovery semantics.</p>
+          <p>A live feed is only useful when consumers can build state safely. The approved beta contract defines explicit ordering, timing, and recovery semantics; implementation and measured coverage remain under validation.</p>
           <div className="principles">
             <div><Check size={17} /><span><strong>Stable identifiers</strong>Canonical IDs connect events, markets, outcomes, and sources across updates.</span></div>
             <div><Check size={17} /><span><strong>Source-aware timestamps</strong>Payloads distinguish observed, ingested, and emitted time where available.</span></div>
@@ -182,7 +182,7 @@ function App() {
         <div className="pricing-heading reveal">
           <span className="section-kicker">Design partner beta</span>
           <h2>Build against the feed early.</h2>
-          <p>Tell us what your system needs and help shape the production interface.</p>
+          <p>Tell us where your system overlaps the release-gated manifest and help validate the beta delivery.</p>
         </div>
         <div className="price-card reveal">
           <div className="popular">PRIVATE BETA</div>
@@ -193,9 +193,9 @@ function App() {
           <ul>
             <li><Check /> Real-time normalized odds feed</li>
             <li><Check /> Snapshot and incremental updates</li>
-            <li><Check /> Direct input on schema and coverage</li>
+            <li><Check /> Direct input on validation priorities</li>
             <li><Check /> Sample payloads and integration guidance</li>
-            <li><Check /> Production pricing before public launch</li>
+            <li><Check /> Pricing shared before any paid conversion</li>
           </ul>
           <a className="button primary full" href="/beta">Request API beta access <ArrowRight size={18} /></a>
           <p className="price-note">No payment required · Qualified design partners only</p>

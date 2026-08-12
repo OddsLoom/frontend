@@ -31,7 +31,7 @@ export default function AboutPage() {
         <div className="about-principles">
           <article><b>01</b><div><h3>Built for machines</h3><p>A structured feed for models, monitoring, trading, media, and automated workflows—not picks and not another betting screen.</p></div></article>
           <article><b>02</b><div><h3>Normalized at the source</h3><p>One vocabulary for events, markets, selections, and prices so downstream systems stay focused on decisions.</p></div></article>
-          <article><b>03</b><div><h3>Honest about readiness</h3><p>OddsLoom is pre-production. The contract is still being shaped, and we will publish measured performance and concrete coverage when they are real.</p></div></article>
+          <article><b>03</b><div><h3>Honest about readiness</h3><p>OddsLoom is pre-production. The beta contract is approved; delivery implementation and measured coverage are still being validated before they appear in the live manifest.</p></div></article>
         </div>
       </section>
 
@@ -39,7 +39,7 @@ export default function AboutPage() {
         <span className="section-kicker">Private beta</span>
         <h2>Building something that moves with the market?</h2>
         <p>We want design partners with real-time use cases and precise requirements. Tell us what your system needs.</p>
-        <div><Link className="button primary" href="/beta">Request beta access <span>→</span></Link><Link className="button secondary" href="/docs">Read the draft docs</Link></div>
+        <div><Link className="button primary" href="/beta">Request beta access <span>→</span></Link><Link className="button secondary" href="/docs">Read the beta docs</Link></div>
       </section>
     </SubpageShell>
   )

@@ -14,9 +14,9 @@ export function DocsPage({ title, lede, children, current = '/docs', next }: { t
   const chapter = sections.find(([href]) => href === current)?.[1] ?? 'Reference'
   return <SubpageShell>
     <div className="docs-layout docs-site-layout docs-reference-layout">
-      <aside className="docs-nav docs-site-nav"><span>DOCUMENTATION</span>{sections.map(([href, label]) => <Link href={href} key={href} aria-current={href === current ? 'page' : undefined}>{label}</Link>)}<i /><small>Draft contract<br />August 2026</small></aside>
+      <aside className="docs-nav docs-site-nav"><span>DOCUMENTATION</span>{sections.map(([href, label]) => <Link href={href} key={href} aria-current={href === current ? 'page' : undefined}>{label}</Link>)}<i /><small>Beta-0 contract<br />August 2026</small></aside>
       <article className="prose docs-content">
-        <header className="docs-reference-header"><span>DRAFT v0.3 / {chapter}</span><h1>{title}</h1><p>{lede}</p></header>
+        <header className="docs-reference-header"><span>V1 / {chapter}</span><h1>{title}</h1><p>{lede}</p></header>
         {children}
         {next && <Link className="docs-next" href={next[0]}><span>CONTINUE</span><strong>{next[1]} →</strong></Link>}
       </article>
