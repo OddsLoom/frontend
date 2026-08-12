@@ -31,16 +31,16 @@ export default function BetaPage() {
   }
 
   if (state === 'success') {
-    return <SubpageShell><section className="form-success"><div className="success-mark"><Check /></div><span className="section-kicker">Application received</span><h1>Thanks for building with us.</h1><p>We’ll review your requirements and reach out when there is a useful next step—whether that is a schema conversation, sandbox access, or the private beta.</p><div><a className="button primary" href="/docs">Review the draft docs</a><a className="button secondary" href="/">Back to OddsLoom</a></div></section></SubpageShell>
+    return <SubpageShell><section className="form-success"><div className="success-mark"><Check /></div><span className="section-kicker">Application received</span><h1>Thanks for building with us.</h1><p>We’ll review your requirements and reach out when there is a useful next step—whether that is a schema conversation, sandbox access, or the private beta.</p><div><a className="button primary" href="/docs">Review the beta docs</a><a className="button secondary" href="/">Back to OddsLoom</a></div></section></SubpageShell>
   }
 
   return (
     <SubpageShell>
       <PageIntro kicker="Private design-partner beta" title="Tell us what your system needs.">
-        <p>We’re selecting early partners based on technical fit and coverage requirements. There is no payment required and no production-access promise.</p>
+        <p>We’re selecting qualified design partners based on technical fit and overlap with the release-gated coverage manifest. Beta access is free; production access and pricing are not yet offered.</p>
       </PageIntro>
       <section className="application-wrap">
-        <div className="application-context"><span className="section-kicker">What happens next</span><ol><li><b>01</b><span><strong>We review the fit.</strong>Your use case and required coverage help prioritize the feed.</span></li><li><b>02</b><span><strong>We compare requirements.</strong>If there is a match, we’ll schedule a technical conversation.</span></li><li><b>03</b><span><strong>We integrate deliberately.</strong>Selected partners may receive sample payloads, replay access, or a beta key.</span></li></ol></div>
+        <div className="application-context"><span className="section-kicker">What happens next</span><ol><li><b>01</b><span><strong>We review the fit.</strong>Your use case, technical owner, and required coverage help us assess qualification.</span></li><li><b>02</b><span><strong>We compare requirements.</strong>We check whether your needs overlap the release-gated manifest and fit beta capacity.</span></li><li><b>03</b><span><strong>We integrate deliberately.</strong>Selected partners may receive sample payloads, sandbox access, or a beta key as validation permits.</span></li></ol></div>
         <form className="beta-form" onSubmit={submit}>
           <div className="form-row"><label>Full name<input name="name" required maxLength={100} autoComplete="name" /></label><label>Work email<input name="email" required type="email" maxLength={200} autoComplete="email" /></label></div>
           <label>Company or project<input name="company" required maxLength={160} autoComplete="organization" /></label>
