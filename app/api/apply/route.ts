@@ -7,9 +7,41 @@ export const runtime = 'nodejs'
 type Application = Record<string, unknown>
 
 const limits: Record<string, number> = { name: 100, email: 200, company: 160, useCase: 1200, coverage: 1200, provider: 160, budget: 40 }
+const notificationEmail = 'contact@oddsloom.com'
 
 function clean(value: unknown, max: number) {
   return typeof value === 'string' ? value.trim().slice(0, max) : ''
+}
+
+async function notifyContact(application: Record<string, string>) {
+  const apiKey = process.env.RESEND_API_KEY
+  const fromEmail = process.env.RESEND_FROM_EMAIL
+  if (!apiKey || !fromEmail) {
+    console.warn('Beta application notification skipped: RESEND_API_KEY or RESEND_FROM_EMAIL is not configured')
+    return
+  }
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      from: fromEmail,
+      to: [notificationEmail],
+      reply_to: application.email,
+      subject: `New OddsLoom beta application from ${application.name}`,
+      text: [
+        `Name: ${application.name}`,
+        `Email: ${application.email}`,
+        `Company or project: ${application.company}`,
+        `What they are building: ${application.useCase}`,
+        `Required coverage: ${application.coverage}`,
+        `Current provider: ${application.provider || 'Not provided'}`,
+        `Monthly data budget: ${application.budget || 'Not provided'}`,
+      ].join('\n'),
+    }),
+  })
+
+  if (!response.ok) throw new Error(`Resend returned HTTP ${response.status}`)
 }
 
 export async function POST(request: Request) {
@@ -37,6 +69,12 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Unable to persist beta application', error)
     return NextResponse.json({ error: 'The application service is temporarily unavailable. Please try again.' }, { status: 503 })
+  }
+
+  try {
+    await notifyContact(application as Record<string, string>)
+  } catch (error) {
+    console.error('Unable to notify contact about beta application', error)
   }
 
   return NextResponse.json({ ok: true }, { status: 201 })
