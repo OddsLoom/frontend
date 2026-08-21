@@ -7,13 +7,24 @@ function Block({ block }: { block: ArticleBlock }) {
   if (block.type === 'paragraphs') return <>{block.body.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</>
   if (block.type === 'bullets') return <ul>{block.items.map(item => <li key={item}>{item}</li>)}</ul>
   if (block.type === 'steps') return <ol className="article-steps">{block.items.map(item => <li key={item.title}><strong>{item.title}</strong><span>{item.body}</span></li>)}</ol>
+  if (block.type === 'pattern') return <aside className="article-pattern">
+    <header><h3>{block.name}</h3><span>Design pattern</span></header>
+    <dl>
+      <div><dt>Problem</dt><dd>{block.problem}</dd></div>
+      <div><dt>Response</dt><dd>{block.response}</dd></div>
+      <div><dt>Tradeoff</dt><dd>{block.tradeoff}</dd></div>
+    </dl>
+  </aside>
   if (block.type === 'callout') return <aside className={`article-callout ${block.tone === 'warning' ? 'warning' : ''}`}><strong>{block.title}</strong><p>{block.body}</p></aside>
   if (block.type === 'table') return <figure className="article-table-wrap">{block.caption && <figcaption>{block.caption}</figcaption>}<div><table><thead><tr>{block.headers.map(header => <th key={header}>{header}</th>)}</tr></thead><tbody>{block.rows.map((row, index) => <tr key={index}>{row.map((cell, cellIndex) => <td key={`${index}-${cellIndex}`}>{cell}</td>)}</tr>)}</tbody></table></div></figure>
-  return <figure className="article-code">
-    <figcaption><span>{block.filename}</span><small>{block.language}</small><CopyCode code={block.code} /></figcaption>
-    <pre><code>{block.code}</code></pre>
-    {block.caption && <p>{block.caption}</p>}
-  </figure>
+  return <details className="article-code">
+    <summary><span>Reference code</span><b>{block.filename}</b><small>{block.language}</small></summary>
+    <div className="article-code-body">
+      <div><CopyCode code={block.code} /></div>
+      <pre><code>{block.code}</code></pre>
+      {block.caption && <p>{block.caption}</p>}
+    </div>
+  </details>
 }
 
 export function Article({ article }: { article: DeveloperArticle }) {
@@ -34,12 +45,13 @@ export function Article({ article }: { article: DeveloperArticle }) {
         <h1>{article.title}</h1>
         <p>{article.summary}</p>
       </header>
-      <div className="developer-article-layout">
-        <aside className="article-rail" aria-label="Article navigation">
-          <span>IN THIS GUIDE</span>
-          {article.sections.map(section => <a key={section.id} href={`#${section.id}`}>{section.title}</a>)}
-        </aside>
-        <div className="article-body">
+      <div className="article-reading-surface">
+        <div className="developer-article-layout">
+          <aside className="article-rail" aria-label="Article navigation">
+            <span>IN THIS GUIDE</span>
+            {article.sections.map(section => <a key={section.id} href={`#${section.id}`}>{section.title}</a>)}
+          </aside>
+          <div className="article-body">
           <section className="article-start">
             <div><h2>Before you start</h2><ul>{article.prerequisites.map(item => <li key={item}>{item}</li>)}</ul></div>
             <div><h2>What you will build</h2><ul>{article.outcomes.map(item => <li key={item}>{item}</li>)}</ul></div>
@@ -54,6 +66,7 @@ export function Article({ article }: { article: DeveloperArticle }) {
             <p>The examples use sanitized v1-shaped payloads. Apply for beta access when you are ready to connect the same client design to a released OddsLoom scope.</p>
             <div><Link className="button primary" href="/beta">Request beta access</Link><Link className="button secondary" href="/docs/protocol">Read the protocol</Link></div>
           </section>
+          </div>
         </div>
       </div>
     </article>

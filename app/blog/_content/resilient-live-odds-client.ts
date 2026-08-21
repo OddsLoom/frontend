@@ -14,15 +14,15 @@ export const resilientLiveOddsClient: DeveloperArticle = {
     'An OddsLoom beta API key supplied through an environment variable',
   ],
   outcomes: [
-    'Build local state from a complete v1 REST snapshot before consuming deltas',
-    'Authenticate and subscribe without placing credentials in a URL',
-    'Bind a stream to the snapshot position and exact effective scope',
-    'Apply complete entity and quote replacements idempotently',
+    'Recognize four reusable patterns behind a correct streaming client',
+    'Choose where each pattern belongs in your own architecture',
+    'Understand the failure each pattern is designed to prevent',
+    'Use the optional TypeScript references to validate the design',
   ],
   sections: [
     {
       id: 'why-snapshot-first',
-      title: 'The stream is not your starting state',
+      title: 'Pattern 1: Snapshot + Delta',
       lede: 'A WebSocket tells you what changed. It cannot tell a new consumer everything that was already true before the connection opened.',
       blocks: [
         {
@@ -32,6 +32,13 @@ export const resilientLiveOddsClient: DeveloperArticle = {
             'OddsLoom v1 makes that boundary explicit. An authenticated REST request returns a complete canonical snapshot for a filtered scope. The response also contains a short-lived snapshot_position. After atomically installing that snapshot, the client opens a WebSocket, authenticates in its first application frame, and creates one subscription using that position and the snapshot\'s exact effective_scope. Only then do relevant deltas begin, at subscription sequence 1.',
             'The important unit is a transition between coherent graphs. If the position becomes stale before subscription acceptance, the server rejects it and the client starts again from a fresh snapshot.',
           ],
+        },
+        {
+          type: 'pattern',
+          name: 'Snapshot + Delta',
+          problem: 'A change stream cannot reconstruct facts that existed before the client connected, and a snapshot alone becomes stale immediately.',
+          response: 'Install one coherent snapshot, bind a stream to its exact position and scope, then apply every contiguous delta that follows.',
+          tradeoff: 'Startup requires a two-step handshake. In return, the consumer can explain exactly which state it has and where continuity began.',
         },
         {
           type: 'steps',
@@ -47,7 +54,7 @@ export const resilientLiveOddsClient: DeveloperArticle = {
     },
     {
       id: 'model-v1',
-      title: 'Model the v1 boundary, not a sportsbook page',
+      title: 'The state model beneath the patterns',
       lede: 'Provider records are normalized into stable canonical objects. Quotes are the frequently changing edge of that graph.',
       blocks: [
         {
@@ -203,7 +210,7 @@ export const sanitizedSnapshot: SnapshotEnvelope = {
     },
     {
       id: 'atomic-store',
-      title: 'Install snapshots atomically and replace by identity',
+      title: 'Pattern 2: Atomic State Replacement',
       lede: 'A snapshot is a replacement boundary. Build a new graph, validate its references, and expose it only when the whole graph is ready.',
       blocks: [
         {
@@ -212,6 +219,13 @@ export const sanitizedSnapshot: SnapshotEnvelope = {
             'Construct every ID-keyed map before assigning current. That assignment is atomic for readers in one Node.js process; a database-backed consumer needs the equivalent transaction or generation pointer.',
             'Never merge a fresh snapshot into stale maps or patch an upsert field by field. Each state.upsert and odds.upsert is a complete replacement, making repeated application harmless.',
           ],
+        },
+        {
+          type: 'pattern',
+          name: 'Atomic State Replacement',
+          problem: 'Readers can observe broken references when a new graph is exposed one collection or row at a time.',
+          response: 'Build and validate the replacement off to the side, then publish it through one reference swap, transaction, or generation pointer.',
+          tradeoff: 'Replacement temporarily uses more memory or storage, but readers never see a half-old, half-new graph.',
         },
         {
           type: 'code',
@@ -295,7 +309,7 @@ export class OddsStore {
     },
     {
       id: 'bootstrap-and-subscribe',
-      title: 'Fetch, authenticate, and bind the stream',
+      title: 'Pattern 3: Scope-Bound Subscription',
       lede: 'The handshake is deliberately ordered. Each frame proves one more fact before live mutations are allowed.',
       blocks: [
         {
@@ -305,6 +319,13 @@ export class OddsStore {
             'Put the key in the REST Authorization header and first WebSocket application frame, never either URL. Send subscription.create only after session.authenticated. Control frames use sequence 0 before subscription; relevant subscription messages start at sequence 1.',
             'This client uses Node\'s fetch and the ws package. It surfaces closes and gaps through onRecoveryRequired; article two turns that signal into a supervised resnapshot loop.',
           ],
+        },
+        {
+          type: 'pattern',
+          name: 'Scope-Bound Subscription',
+          problem: 'A valid stream can still corrupt a consumer if it resumes from a position issued for another key, filter set, or effective coverage scope.',
+          response: 'Treat the authenticated key, effective scope, and snapshot position as one subscription capability that must be accepted together.',
+          tradeoff: 'Clients must restart when any member of the capability changes instead of quietly widening or reusing state.',
         },
         {
           type: 'code',
@@ -431,8 +452,15 @@ await connect(snapshot, store, (reason) => {
     },
     {
       id: 'idempotency',
-      title: 'Treat replacements and removals literally',
+      title: 'Pattern 4: Idempotent Full-State Reducer',
       blocks: [
+        {
+          type: 'pattern',
+          name: 'Idempotent Full-State Reducer',
+          problem: 'Partial patches, duplicates, and inferred deletions make retry behavior depend on the accidental state already in memory.',
+          response: 'Replace complete objects by canonical ID, remove only on explicit messages, and commit sequence metadata after the mutation succeeds.',
+          tradeoff: 'Messages are larger than minimal patches, but application, correction, and retry behavior become deterministic.',
+        },
         {
           type: 'table',
           headers: ['Message', 'Consumer action', 'Do not infer'],
