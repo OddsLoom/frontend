@@ -235,14 +235,15 @@ export const canonicalIdsCrossBookMarkets: DeveloperArticle = {
     'Contiguous delta handling and resnapshot recovery from part two',
   ],
   outcomes: [
-    'Navigate the canonical sport-to-quote relationship graph',
-    'Compare sportsbook offers by canonical outcome and line',
-    'Handle upserts, suspensions, and removals without stale joins',
+    'Recognize four identity patterns behind safe cross-book comparison',
+    'Separate stable meaning from mutable commercial terms',
+    'Know when an offer must remain outside the comparison graph',
+    'Use the optional TypeScript reference to validate the model',
   ],
   sections: [
     {
       id: 'labels-are-not-identity',
-      title: 'Provider labels are evidence, not identity',
+      title: 'Pattern 1: Canonical Identity Graph',
       lede: 'Cross-book matching fails when presentation strings are treated as database keys.',
       blocks: [
         {
@@ -252,6 +253,13 @@ export const canonicalIdsCrossBookMarkets: DeveloperArticle = {
             'Joining raw source IDs cannot work across books because each ID belongs to its provider namespace. Joining lowercased labels is unsafe because labels omit meaning, change for presentation, and collide. Even home and away are not permanent participant properties: a team’s role changes from event to event. OddsLoom resolves provider records into stable canonical entities so your application can consume an identity graph instead of recreating provider-specific matching logic.',
             'Keep source.eventId, source.marketId, and source.selectionId as provenance for diagnostics. Do not use them as cross-book keys, and do not derive a replacement canonical key from the displayed names. If records share canonical IDs, the normalization boundary has established their relationship. If they do not, similar text alone is not permission to merge them.',
           ],
+        },
+        {
+          type: 'pattern',
+          name: 'Canonical Identity Graph',
+          problem: 'Provider IDs are namespace-specific and presentation labels collide, change, or omit settlement meaning.',
+          response: 'Resolve provider records into shared canonical entities, while retaining source IDs only as diagnostic provenance.',
+          tradeoff: 'Some offers remain unmatched until identity is proven. The system prefers an explicit gap over a false join.',
         },
         {
           type: 'table',
@@ -289,7 +297,7 @@ export const canonicalIdsCrossBookMarkets: DeveloperArticle = {
     },
     {
       id: 'market-identity',
-      title: 'Separate market identity from line and price',
+      title: 'Pattern 2: Stable Core, Mutable Edge',
       lede: 'A comparable board is stable; its commercial terms move.',
       blocks: [
         {
@@ -299,6 +307,13 @@ export const canonicalIdsCrossBookMarkets: DeveloperArticle = {
             'For an ordinary spread or total, group offers first by canonical outcomeId and then by line. Two prices for the same outcome at +5.5 are candidates for comparison. A +5.5 offer and a +6 offer are different priced selections, even though they reference the same market and outcome. For a market without a line, outcomeId is sufficient for the semantic selection and a no-line sentinel keeps the index shape consistent.',
             'Availability also matters. Compare only offers your application is willing to display—usually open quotes. A suspended quote still exists and may reopen, but it is not currently actionable. Closed quotes should likewise be excluded from a best-price calculation. Jurisdiction is part of the offer context, so filter or partition by jurisdiction before presenting a comparison to a user.',
           ],
+        },
+        {
+          type: 'pattern',
+          name: 'Stable Core, Mutable Edge',
+          problem: 'Embedding every moving line and price into market identity causes duplicate entities and brittle downstream joins.',
+          response: 'Keep event, market, and outcome meaning stable; attach book, jurisdiction, availability, line, and price to the replaceable quote edge.',
+          tradeoff: 'Consumers navigate more references, but high-frequency changes no longer churn the descriptive graph.',
         },
         {
           type: 'table',
@@ -342,7 +357,7 @@ export const canonicalIdsCrossBookMarkets: DeveloperArticle = {
     },
     {
       id: 'canonicalization-boundary',
-      title: 'Respect the canonicalization boundary',
+      title: 'Pattern 3: Admission Boundary',
       lede: 'Missing data is safer than a false comparison.',
       blocks: [
         {
@@ -353,11 +368,18 @@ export const canonicalIdsCrossBookMarkets: DeveloperArticle = {
             'There are many reasons an upstream candidate may be withheld: an unresolved participant, unknown metric or period, unsupported settlement rule, ambiguous live occurrence, or insufficient source evidence. Your application should not fill those gaps by matching names. Instead, monitor the coverage manifest and source status, and design empty states that say the requested market is not currently in the released canonical scope.',
           ],
         },
+        {
+          type: 'pattern',
+          name: 'Admission Boundary',
+          problem: 'Ambiguous offers look usable enough to leak into comparisons even though their subject, period, or settlement semantics are unresolved.',
+          response: 'Publish only graph-safe canonical markets; keep provider-specific and unresolved candidates behind the delivery boundary.',
+          tradeoff: 'Visible coverage can be narrower than raw ingestion, but every delivered comparison has typed meaning and complete dependencies.',
+        },
       ],
     },
     {
       id: 'live-lifecycle',
-      title: 'Maintain joins through the live lifecycle',
+      title: 'Pattern 4: Explicit Lifecycle',
       lede: 'Correct identity does not help if stale objects survive a removal.',
       blocks: [
         {
@@ -367,6 +389,13 @@ export const canonicalIdsCrossBookMarkets: DeveloperArticle = {
             'A suspension is an odds.upsert whose quote has availability set to suspended. It is not a removal, and your index should stop ranking it while retaining its identity. A withdrawn offer arrives as odds.remove and must be deleted. Reference removals arrive through state.remove in quote-first dependency-safe order so the graph does not retain dangling children.',
             'Apply these messages only inside the ordered subscription loop from part two. If a sequence is duplicated, deduplicate it by message ID. If a sequence is missing, do not continue updating this graph. Beta-0 has no replay: discard uncommitted deltas, fetch and atomically apply a fresh REST snapshot, then open a new subscription at that snapshot position.',
           ],
+        },
+        {
+          type: 'pattern',
+          name: 'Explicit Lifecycle',
+          problem: 'Inferring deletion from absence or treating suspension as removal leaves stale joins and destroys identities that may reopen.',
+          response: 'Model corrections as full replacements, suspensions as retained unavailable quotes, and withdrawals as explicit removals in dependency-safe order.',
+          tradeoff: 'Consumers must handle more state transitions, but they never have to guess whether silence means closed, stale, or removed.',
         },
         {
           type: 'code',
