@@ -3,6 +3,7 @@ export type ArticleBlock =
   | { type: 'bullets'; items: string[] }
   | { type: 'steps'; items: Array<{ title: string; body: string }> }
   | { type: 'code'; language: string; filename: string; code: string; caption?: string }
+  | { type: 'pattern'; name: string; problem: string; response: string; tradeoff: string }
   | { type: 'callout'; title: string; body: string; tone?: 'note' | 'warning' }
   | { type: 'table'; headers: string[]; rows: string[][]; caption?: string }
 
