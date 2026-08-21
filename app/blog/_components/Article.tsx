@@ -18,6 +18,15 @@ function Block({ block }: { block: ArticleBlock }) {
 
 export function Article({ article }: { article: DeveloperArticle }) {
   return <SubpageShell>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'TechArticle',
+      headline: article.title,
+      description: article.description,
+      url: `https://oddsloom.com/blog/${article.slug}`,
+      author: { '@type': 'Organization', name: 'OddsLoom', url: 'https://oddsloom.com' },
+      publisher: { '@type': 'Organization', name: 'OddsLoom', url: 'https://oddsloom.com' },
+    }).replace(/</g, '\\u003c') }} />
     <article className="developer-article">
       <header className="developer-article-header">
         <Link href="/blog" className="article-back">← All engineering guides</Link>

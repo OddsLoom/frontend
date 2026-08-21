@@ -6,6 +6,7 @@ import { articles } from './_content'
 export const metadata: Metadata = {
   title: 'Live Odds Engineering Guides',
   description: 'Runnable guides for building correct, resilient applications on real-time sportsbook odds feeds.',
+  alternates: { canonical: '/blog' },
 }
 
 export default function BlogIndex() {
