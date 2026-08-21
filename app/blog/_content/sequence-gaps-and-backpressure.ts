@@ -14,15 +14,15 @@ export const sequenceGapsAndBackpressure: DeveloperArticle = {
     'A willingness to replace local state when continuity cannot be proven',
   ],
   outcomes: [
-    'A reducer that applies each subscription sequence once and detects gaps',
-    'Correct handling for replacement upserts, suspensions, and explicit removals',
-    'A bounded reconnect loop that always crosses a fresh-snapshot boundary',
-    'Operational signals that distinguish connection health from state correctness',
+    'Recognize four recovery patterns and the failures each one contains',
+    'Choose a correctness boundary for gaps, disconnects, and slow consumers',
+    'Understand how bounded work prevents hidden backpressure debt',
+    'Use the optional TypeScript references to test the patterns',
   ],
   sections: [
     {
       id: 'correctness-model',
-      title: 'Treat continuity as a correctness property',
+      title: 'Pattern 1: Contiguous Sequence Gate',
       lede: 'A connected socket does not prove that the state in memory matches the state at the publisher.',
       blocks: [
         {
@@ -32,6 +32,13 @@ export const sequenceGapsAndBackpressure: DeveloperArticle = {
             'Sequence belongs to the subscription, not to an event, sportsbook, or permanent global log. A reconnect creates a new subscription whose relevant deltas start at 1 again. Persisting 847 from an old connection and expecting 848 on a new one would mix two different ordering domains.',
             'The safe rule is deliberately strict: apply a delta only when its sequence is exactly the last committed sequence plus one. Ignore a previously committed message ID or sequence. If the next value jumps ahead, stop changing consumer-visible state immediately. You cannot infer what the missing message contained.',
           ],
+        },
+        {
+          type: 'pattern',
+          name: 'Contiguous Sequence Gate',
+          problem: 'A connected consumer can still miss one or more state transitions, leaving a locally plausible but incorrect graph.',
+          response: 'Apply only the next subscription sequence, deduplicate committed messages, and freeze mutations the moment continuity cannot be proven.',
+          tradeoff: 'The client stops on ambiguity instead of guessing forward. That creates visible recovery work but prevents silent divergence.',
         },
         {
           type: 'table',
@@ -55,7 +62,7 @@ export const sequenceGapsAndBackpressure: DeveloperArticle = {
     },
     {
       id: 'reducer',
-      title: 'Make delta application explicit and idempotent',
+      title: 'Pattern 2: Idempotent Delta Reducer',
       lede: 'Full-state upserts make correction handling simple: replace the object at its canonical ID. Absence is not a removal.',
       blocks: [
         {
@@ -64,6 +71,13 @@ export const sequenceGapsAndBackpressure: DeveloperArticle = {
             'An odds.upsert creates or completely replaces one quote. That includes corrections at a higher sequence. A suspended quote remains present with availability set to suspended; it must not be offered as current. Delete a quote only after odds.remove. Reference entities follow the same pattern through state.upsert and state.remove, with additions arriving dependency-first and removals arriving quote-first.',
             'The reducer below uses sanitized v1-shaped messages. It copies the quote map before applying a change, then advances committedSequence only after the replacement state is ready. A database-backed consumer should make the entity change, message-ID insert, and sequence checkpoint one transaction. That transaction is what turns process crashes into safe redelivery instead of partial state.',
           ],
+        },
+        {
+          type: 'pattern',
+          name: 'Idempotent Delta Reducer',
+          problem: 'Retries and process crashes can cause the same logical update to reach local state more than once.',
+          response: 'Replace full objects by ID and commit the mutation, message ID, and sequence checkpoint in one durable boundary.',
+          tradeoff: 'The reducer must serialize state changes and retain deduplication metadata, but retry behavior no longer depends on timing.',
         },
         {
           type: 'code',
@@ -225,7 +239,7 @@ console.log("Gap detected without corrupting visible state");`,
     },
     {
       id: 'backpressure',
-      title: 'Bound work before the socket bounds it for you',
+      title: 'Pattern 3: Bounded Consumer',
       lede: 'Backpressure means the consumer is not keeping pace with publication. More buffering only postpones the correctness decision.',
       blocks: [
         {
@@ -234,6 +248,13 @@ console.log("Gap detected without corrupting visible state");`,
             'OddsLoom disconnects a slow client rather than silently dropping deltas. The measured beta behavior is WebSocket close code 1013 with reason backpressure. Treat that close as a signal to reduce work, capacity, or scope—but use the same correctness recovery as any other disconnect.',
             'Keep the socket callback cheap. Parse and validate the envelope, place it on a bounded queue, and apply messages serially. If the queue reaches its bound, stop accepting frames, mark the consumer recovering, close the socket, and resnapshot. Do not process sequence 920 merely because sequence 919 might still be hidden in an unbounded application queue.',
           ],
+        },
+        {
+          type: 'pattern',
+          name: 'Bounded Consumer',
+          problem: 'An unbounded queue hides that downstream work is slower than publication until latency and memory become operational failures.',
+          response: 'Keep the socket callback small, serialize application through a bounded queue, and deliberately recover when the bound is reached.',
+          tradeoff: 'The client may resnapshot under load instead of buffering indefinitely. Capacity limits become explicit and measurable.',
         },
         {
           type: 'bullets',
@@ -254,7 +275,7 @@ console.log("Gap detected without corrupting visible state");`,
     },
     {
       id: 'recovery-loop',
-      title: 'Put every disconnect through one recovery loop',
+      title: 'Pattern 4: Fresh-Snapshot Recovery Loop',
       lede: 'A single recovery path is easier to reason about than separate reconnect, stale-position, scope-mismatch, and backpressure paths.',
       blocks: [
         {
@@ -266,6 +287,13 @@ console.log("Gap detected without corrupting visible state");`,
             { title: 'Resubscribe', body: 'Open a new socket, authenticate in the first application frame, and declare the new snapshot_position with matching filters.' },
             { title: 'Resume', body: 'Wait for subscription.accepted, reset the subscription sequence to 0, and accept relevant delta sequence 1.' },
           ],
+        },
+        {
+          type: 'pattern',
+          name: 'Fresh-Snapshot Recovery Loop',
+          problem: 'Separate retry paths for gaps, stale positions, scope mismatches, and disconnects produce subtly different correctness behavior.',
+          response: 'Route every loss of continuity through one state machine: freeze, discard uncommitted work, replace from a fresh snapshot, and resubscribe.',
+          tradeoff: 'Recovery transfers a complete snapshot and temporarily pauses live mutations, but it has one invariant that can be tested across every failure mode.',
         },
         {
           type: 'paragraphs',
